@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para ti</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;1,400&family=Quicksand:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --fondo: #fbeef2;
+    --rosa: #e8a5b8;
+    --rosa-texto: #b5607a;
+    --texto: #6b4a55;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Quicksand', sans-serif;
+    background: var(--fondo);
+    color: var(--texto);
+    min-height: 100vh;
+    line-height: 1.7;
+  }
+
+  /* ---------- Pantalla de inicio ---------- */
+  #intro {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+    padding: 24px;
+    text-align: center;
+    background: var(--fondo);
+    z-index: 10;
+    transition: opacity 1s ease;
+  }
+  #intro.oculta { opacity: 0; pointer-events: none; }
+
+  #intro h1 {
+    font-family: 'Lora', serif;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 1.7rem;
+    color: var(--rosa-texto);
+  }
+  #intro p { font-size: .95rem; opacity: .7; }
+
+  .btn {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1rem;
+    background: transparent;
+    color: var(--rosa-texto);
+    border: 1.5px solid var(--rosa);
+    border-radius: 999px;
+    padding: 10px 34px;
+    cursor: pointer;
+    transition: background .3s ease, color .3s ease;
+  }
+  .btn:hover { background: var(--rosa); color: #fff; }
+
+  /* ---------- Contenido principal ---------- */
+  #principal {
+    display: none;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 64px 24px 96px;
+  }
+  #principal.entra { display: block; animation: aparecer 1.2s ease; }
+
+  .cabecera { text-align: center; margin-bottom: 56px; }
+  .cabecera h1 {
+    font-family: 'Lora', serif;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 2rem;
+    color: var(--rosa-texto);
+  }
+  .cabecera p { font-size: .95rem; opacity: .7; margin-top: 6px; }
+
+  .seccion { margin-bottom: 64px; opacity: 0; animation: aparecer 1.2s ease forwards; }
+  .seccion:nth-of-type(2) { animation-delay: .5s; }
+  .seccion:nth-of-type(3) { animation-delay: 1s; }
+
+  .seccion h2 {
+    font-family: 'Lora', serif;
+    font-weight: 400;
+    font-size: 1.2rem;
+    text-align: center;
+    margin-bottom: 22px;
+    color: var(--rosa-texto);
+  }
+
+  /* Foto */
+  .foto {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    box-shadow: 0 6px 24px rgba(107, 74, 85, .12);
+  }
+  .pie-foto { text-align: center; margin-top: 12px; font-size: .85rem; opacity: .6; }
+
+  /* Carta */
+  .carta { font-family: 'Lora', serif; font-size: 1.05rem; }
+  .carta p {
+    opacity: 0;
+    margin-bottom: 18px;
+    animation: aparecer 1s ease forwards;
+    animation-delay: calc(var(--i) * .8s + .4s);
+  }
+  .carta .firma {
+    text-align: right;
+    font-style: italic;
+    margin-top: 28px;
+    color: var(--rosa-texto);
+  }
+
+  /* Botón de música */
+  #toggleMusica {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: .8rem;
+    background: rgba(255, 255, 255, .7);
+    color: var(--texto);
+    border: 1px solid rgba(107, 74, 85, .2);
+    border-radius: 999px;
+    padding: 6px 14px;
+    cursor: pointer;
+    z-index: 20;
+    display: none;
+  }
+  #toggleMusica.visible { display: block; animation: aparecer .8s ease; }
+
+  @keyframes aparecer {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .seccion, .carta p { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Música de fondo: cancion.mp3 debe estar junto a index.html -->
+<audio id="musica" loop preload="auto" src="cancion.mp3"></audio>
+
+<!-- Pantalla 1 -->
+<section id="intro">
+  <h1>Súbele el audio</h1>
+  <p>Tiene algo para ti</p>
+  <button class="btn" id="btnContinuar">Continuar</button>
+</section>
+
+<!-- Pantalla 2 -->
+<main id="principal">
+
+  <header class="cabecera">
+    <h1>Para ti</h1>
+    <p>7 meses</p>
+  </header>
+
+  <section class="seccion">
+    <h2>Pinta igual que aquí</h2>
+    <img class="foto" src="foto-referencia.jpg" alt="Nuestra foto con colores">
+    <p class="pie-foto">Guíate por los colores</p>
+  </section>
+
+  <!-- Reemplaza el texto de los <p> por tu carta -->
+  <section class="seccion">
+    <h2>Para ti</h2>
+    <div class="carta">
+      <p style="--i:1">Escribe aquí la primera línea de tu carta.</p>
+      <p style="--i:2">Algo que recuerdes de estos meses.</p>
+      <p style="--i:3">Algo que quieras decirle.</p>
+      <p style="--i:4">Cierra con lo que sientes de verdad.</p>
+      <p class="firma" style="--i:5">Tuyo</p>
+    </div>
+  </section>
+
+</main>
+
+<button id="toggleMusica">Pausar música</button>
+
+<script>
+  const intro = document.getElementById('intro');
+  const principal = document.getElementById('principal');
+  const musica = document.getElementById('musica');
+  const btnContinuar = document.getElementById('btnContinuar');
+  const toggle = document.getElementById('toggleMusica');
+
+  // Los navegadores exigen un toque antes de reproducir audio
+  btnContinuar.addEventListener('click', () => {
+    musica.volume = 0.6;
+    musica.play().catch(() => {});
+    toggle.classList.add('visible');
+
+    intro.classList.add('oculta');
+    setTimeout(() => {
+      intro.style.display = 'none';
+      principal.classList.add('entra');
+    }, 900);
+  });
+
+  toggle.addEventListener('click', () => {
+    if (musica.paused) {
+      musica.play();
+      toggle.textContent = 'Pausar música';
+    } else {
+      musica.pause();
+      toggle.textContent = 'Seguir música';
+    }
+  });
+</script>
+
+</body>
+</html>
