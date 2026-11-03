@@ -63,6 +63,109 @@
   }
   .btn:hover { background: var(--rosa); color: #fff; }
 
+  /* ---------- Escena de la bici y el sobre ---------- */
+  #escena {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(180deg, #fbeef2 0%, #f6dbe5 100%);
+    overflow: hidden;
+    z-index: 9;
+    transition: transform 1.4s ease, opacity 1s ease;
+  }
+  #escena.activa { display: block; }
+  #escena.zoom { transform: scale(2.6); transform-origin: 50% 80%; }
+  #escena.fuera { opacity: 0; }
+
+  #suelo {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 20%;
+    height: 1px;
+    background: rgba(107, 74, 85, .25);
+  }
+
+  #bici {
+    position: absolute;
+    bottom: 20%;
+    left: -200px;
+    width: 190px;
+    animation: pasarBici 3.2s linear forwards;
+  }
+  #bici svg { width: 100%; height: auto; display: block; overflow: visible; }
+
+  @keyframes pasarBici {
+    from { left: -200px; }
+    to   { left: 100%; }
+  }
+
+  #sobre-wrap {
+    position: absolute;
+    left: 50%;
+    bottom: 20%;
+    transform: translateX(-50%);
+    opacity: 0;
+    animation: caerSobre .9s ease-in 1.6s forwards;
+  }
+
+  @keyframes caerSobre {
+    0%   { opacity: 0; transform: translate(-50%, -260px); }
+    10%  { opacity: 1; }
+    100% { opacity: 1; transform: translate(-50%, 0); }
+  }
+
+  .sobre {
+    position: relative;
+    width: 140px;
+    height: 95px;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 6px 18px rgba(107, 74, 85, .18);
+  }
+
+  /* Solapa: arriba del sobre cuando está cerrado */
+  .sobre::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: #f6d6e0;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform-origin: top center;
+    transition: transform .9s ease;
+    z-index: 3;
+  }
+  /* Al abrirse, la solapa se va hacia atrás y queda debajo de la hoja */
+  .sobre.abierto::before {
+    transform: rotateX(180deg);
+    z-index: 1;
+  }
+
+  /* Hoja: escondida dentro del sobre, sale hacia adelante al abrirlo */
+  .hoja {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    top: 12px;
+    height: 72px;
+    background:
+      repeating-linear-gradient(transparent 0 11px, rgba(181, 96, 122, .22) 11px 12px),
+      #fffdfb;
+    border: 1px solid rgba(107, 74, 85, .15);
+    border-radius: 2px;
+    z-index: 2;
+    opacity: 0;
+    transform: translateY(0);
+    transition: transform 1s ease .6s, opacity .3s ease .6s;
+  }
+  .sobre.abierto .hoja {
+    opacity: 1;
+    transform: translateY(-60px);
+  }
+
   /* ---------- Contenido principal ---------- */
   #principal {
     display: none;
@@ -146,6 +249,7 @@
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
     .seccion, .carta p { opacity: 1; }
+    #sobre-wrap { opacity: 1; }
   }
 </style>
 </head>
@@ -159,6 +263,66 @@
   <h1>Súbele el audio</h1>
   <p>Tiene algo para ti</p>
   <button class="btn" id="btnContinuar">Continuar</button>
+</section>
+
+<!-- Escena: la bici pasa y deja caer el sobre -->
+<section id="escena">
+  <div id="suelo"></div>
+
+  <div id="bici">
+    <svg viewBox="0 0 200 124" xmlns="http://www.w3.org/2000/svg">
+      <!-- ruedas: neumático + rayos -->
+      <g fill="none" stroke="#3d2a33">
+        <circle cx="45" cy="85" r="32" stroke-width="6"/>
+        <circle cx="155" cy="85" r="32" stroke-width="6"/>
+        <g stroke-width="1.2" opacity=".7">
+          <line x1="45" y1="85" x2="73" y2="85"/>
+          <line x1="45" y1="85" x2="64.8" y2="104.8"/>
+          <line x1="45" y1="85" x2="45" y2="113"/>
+          <line x1="45" y1="85" x2="25.2" y2="104.8"/>
+          <line x1="45" y1="85" x2="17" y2="85"/>
+          <line x1="45" y1="85" x2="25.2" y2="65.2"/>
+          <line x1="45" y1="85" x2="45" y2="57"/>
+          <line x1="45" y1="85" x2="64.8" y2="65.2"/>
+          <line x1="155" y1="85" x2="183" y2="85"/>
+          <line x1="155" y1="85" x2="174.8" y2="104.8"/>
+          <line x1="155" y1="85" x2="155" y2="113"/>
+          <line x1="155" y1="85" x2="135.2" y2="104.8"/>
+          <line x1="155" y1="85" x2="127" y2="85"/>
+          <line x1="155" y1="85" x2="135.2" y2="65.2"/>
+          <line x1="155" y1="85" x2="155" y2="57"/>
+          <line x1="155" y1="85" x2="174.8" y2="65.2"/>
+        </g>
+      </g>
+      <circle cx="45" cy="85" r="3.5" fill="#3d2a33"/>
+      <circle cx="155" cy="85" r="3.5" fill="#3d2a33"/>
+
+      <!-- cuadro -->
+      <g fill="none" stroke="#3d2a33" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M45 85 L95 85"/>      <!-- chainstay -->
+        <path d="M45 85 L75 35"/>      <!-- seatstay -->
+        <path d="M95 85 L75 35"/>      <!-- tubo del asiento -->
+        <path d="M75 35 L140 38"/>     <!-- tubo superior -->
+        <path d="M95 85 L140 42"/>     <!-- tubo inferior -->
+        <path d="M140 42 L155 85"/>    <!-- horquilla -->
+        <path d="M140 38 L142 20 Q148 14 160 20"/> <!-- manubrio drop -->
+      </g>
+
+      <!-- asiento -->
+      <path d="M62 30 L88 30" stroke="#3d2a33" stroke-width="6" stroke-linecap="round"/>
+
+      <!-- platos y pedal -->
+      <circle cx="95" cy="85" r="11" fill="none" stroke="#3d2a33" stroke-width="2.5"/>
+      <circle cx="95" cy="85" r="4" fill="#3d2a33"/>
+      <line x1="95" y1="85" x2="106" y2="94" stroke="#3d2a33" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <div id="sobre-wrap">
+    <div class="sobre" id="sobre">
+      <div class="hoja"></div>
+    </div>
+  </div>
 </section>
 
 <!-- Pantalla 2 -->
@@ -193,6 +357,8 @@
 
 <script>
   const intro = document.getElementById('intro');
+  const escena = document.getElementById('escena');
+  const sobre = document.getElementById('sobre');
   const principal = document.getElementById('principal');
   const musica = document.getElementById('musica');
   const btnContinuar = document.getElementById('btnContinuar');
@@ -205,10 +371,25 @@
     toggle.classList.add('visible');
 
     intro.classList.add('oculta');
+
+    // Línea de tiempo de la escena:
+    // 0.0s  pasa la bici (3.2s)
+    // 1.6s  cae el sobre (0.9s)
+    // 3.4s  zoom al sobre
+    // 5.0s  se abre el sobre
+    // 6.4s  se desvanece la escena y aparece la página
     setTimeout(() => {
       intro.style.display = 'none';
-      principal.classList.add('entra');
+      escena.classList.add('activa');
     }, 900);
+
+    setTimeout(() => escena.classList.add('zoom'), 3400);
+    setTimeout(() => sobre.classList.add('abierto'), 5000);
+    setTimeout(() => escena.classList.add('fuera'), 6400);
+    setTimeout(() => {
+      escena.style.display = 'none';
+      principal.classList.add('entra');
+    }, 7400);
   });
 
   toggle.addEventListener('click', () => {
